@@ -7,6 +7,8 @@ Intended to be used as an init container for a Kubernetes pod.
 
 ## Usage
 
+Set a `KUBE_NAMESPACE` env var in the Docker container.
+
 Any env vars containing `KUBE_LABEL_` will be applied to the pod as labels via
 the API. For example:
 
@@ -28,7 +30,33 @@ as labels (e.g. exposing a unique label for each pod in a stateful).
 
 ## Kubernetes example
 
-TODO
+This init container sets a `hostname` label equal to the pod's name:
+
+```yaml
+initContainers:
+  - image: devth/k8s-labeler
+    name: labeler
+    env:
+      - name: KUBE_NAMESPACE
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.namespace
+      - name: KUBE_LABEL_hostname
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+```
+
+Inspect the pod with:
+
+```bash
+kubectl get pod -l app=myapp --show-labels
+
+NAME                     READY     STATUS    RESTARTS   AGE       LABELS
+myapp-2768796676-c702s   2/2       Running   0          25m       app=myapp,hostname=myapp-2768796676-c702s,pod-template-hash=2768796676
+```
+
+And notice that the `hostname=myapp-2768796676-c702s` label is present.
 
 ## License
 

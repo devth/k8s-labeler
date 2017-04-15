@@ -4,4 +4,6 @@ MAINTAINER Trevor Hartman <trevorhartman@gmail.com>
 
 RUN apk --update add curl bash
 
-CMD run.sh
+ADD run.sh /run.sh
+
+CMD /run.sh

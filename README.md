@@ -7,7 +7,8 @@ Intended to be used as an init container for a Kubernetes pod.
 
 ## Usage
 
-Set a `KUBE_NAMESPACE` env var in the Docker container.
+The `KUBE_NAMESPACE` env var is **required**. This must match the namespace of
+the pod you're running in.
 
 Any env vars containing `KUBE_LABEL_` will be applied to the pod as labels via
 the API. For example:
